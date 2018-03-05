@@ -4,15 +4,16 @@ spring:
 #    username: idsbase
 #    password: idsbasemysql
 #    driver-class-name: com.mysql.jdbc.Driver
-    url: jdbc:h2:D:/h2
+    url: jdbc:h2:D:/h8
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
-#    data: classpath:init.sql
+    data: classpath:init.sql
   thymeleaf:
     prefix: classpath:/templates
     cache: false
   jpa:
+    database: h2
     hibernate:
       ddl-auto: update
     show-sql: true

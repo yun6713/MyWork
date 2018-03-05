@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  *   
  */  
 @ApiModel(value = "UserInfo", description = "用户信息")
-@Entity(name="sys_permission")  
+@Entity(name="SYS_PERMISSION")  
 public class SysPermission implements Serializable {  
     private static final long serialVersionUID = 1L;  
     @ApiModelProperty(value = "主键(新增时无效)", required = true)

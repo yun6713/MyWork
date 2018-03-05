@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  *  
  */  
 @ApiModel(value = "UserInfo", description = "用户信息")
-@Entity(name = "user_info")  
+@Entity(name = "USER_INFO")  
 public class UserInfo implements Serializable {  
   
     /**  
@@ -53,7 +53,7 @@ public class UserInfo implements Serializable {
   
     @ApiModelProperty(value = "用户角色",required = true, position = 7)
     @ManyToMany(fetch = FetchType.EAGER) // 立即从数据库中进行加载数据  
-    @JoinTable(name = "SysUserRole", joinColumns = { @JoinColumn(name = "uid") }, inverseJoinColumns = {  
+    @JoinTable(name = "SYS_USER_ROLE", joinColumns = { @JoinColumn(name = "uid") }, inverseJoinColumns = {  
             @JoinColumn(name = "roleId") })  
     private List<SysRole> roleList;// 一个用户具有多个角色  
   

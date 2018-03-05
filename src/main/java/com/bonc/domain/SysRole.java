@@ -21,7 +21,7 @@ import io.swagger.annotations.ApiModelProperty;
  * 
  */
 @ApiModel(value = "User", description = "用户实体")
-@Entity(name = "sys_role")
+@Entity(name = "SYS_ROLE")
 public class SysRole implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@ApiModelProperty(value = "主键(新增时无效)", required = true)
@@ -38,14 +38,14 @@ public class SysRole implements Serializable {
 	// 角色 -- 权限关系：多对多关系;
 	@ApiModelProperty(value = "角色权限", required = true, position = 4)
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "SysRolePermission", joinColumns = { @JoinColumn(name = "roleId") }, inverseJoinColumns = {
+	@JoinTable(name = "SYS_ROLE_PERMISSION", joinColumns = { @JoinColumn(name = "roleId") }, inverseJoinColumns = {
 			@JoinColumn(name = "permissionId") })
 	private List<SysPermission> permissions;
 
 	// 用户 - 角色关系定义;
 	@ApiModelProperty(value = "用户角色", required = true, position = 5)
 	@ManyToMany
-	@JoinTable(name = "SysUserRole", joinColumns = { @JoinColumn(name = "roleId") }, inverseJoinColumns = {
+	@JoinTable(name = "SYS_USER_ROLE", joinColumns = { @JoinColumn(name = "roleId") }, inverseJoinColumns = {
 			@JoinColumn(name = "uid") })
 	private List<UserInfo> userInfos;// 一个角色对应多个用户
 
