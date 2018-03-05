@@ -10,7 +10,16 @@ import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.crypto.hash.SimpleHash;
+import org.quartz.CronScheduleBuilder;
+import org.quartz.CronTrigger;
+import org.quartz.Job;
+import org.quartz.JobBuilder;
+import org.quartz.JobDetail;
+import org.quartz.Scheduler;
+import org.quartz.SchedulerException;
+import org.quartz.TriggerBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,6 +40,9 @@ import io.swagger.annotations.ApiOperation;
 @Api(tags = "用户管理", description = "对系统内的用户信息进行管理")
 @RequestMapping("/userInfo")  
 public class UserInfoController { 
+    //加入Qulifier注解，通过名称注入bean
+    @Autowired @Qualifier("Scheduler")
+    private Scheduler scheduler;
 	private final UserInfoService userInfoService;
 	private final SysRoleService sysRoleService;
 	@Autowired
@@ -51,6 +63,48 @@ public class UserInfoController {
     public String userInfo(){  
 		System.out.println("/userList");
        return userInfoService.findAllUserInfos().toString();  
+    } 
+	
+	/**  
+     * 用户开启定时任务.  
+     * @return  
+     */  
+	@ApiOperation(value = "开启定时任务")
+	@RequestMapping(value = "/addjob", method = RequestMethod.POST)
+	@RequiresPermissions("userInfo:view")//权限管理; 
+	@ApiImplicitParams({ @ApiImplicitParam(name = "jobClassName", value = "注册用户名", paramType = "form", required = true),
+		@ApiImplicitParam(name = "jobGroupName", value = "用户密码", paramType = "form", required = true),
+		@ApiImplicitParam(name = "cronExpression", value = "用户密码", paramType = "form", required = true)})
+	@ResponseBody
+	public void addjob(@RequestParam(value="jobClassName")String jobClassName, 
+            @RequestParam(value="jobGroupName")String jobGroupName, 
+            @RequestParam(value="cronExpression")String cronExpression) throws Exception
+    {           
+        addJob(jobClassName, jobGroupName, cronExpression);
+    }
+
+    public void addJob(String jobClassName, String jobGroupName, String cronExpression)throws Exception{
+
+        // 启动调度器  
+        scheduler.start(); 
+
+        //构建job信息
+        JobDetail jobDetail = JobBuilder.newJob(getClass(jobClassName).getClass()).withIdentity(jobClassName, jobGroupName).build();
+
+        //表达式调度构建器(即任务执行的时间)
+        CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
+
+        //按新的cronExpression表达式构建一个新的trigger
+        CronTrigger trigger = TriggerBuilder.newTrigger().withIdentity(jobClassName, jobGroupName)
+            .withSchedule(scheduleBuilder).build();
+
+        try {
+            scheduler.scheduleJob(jobDetail, trigger);
+
+        } catch (SchedulerException e) {
+            System.out.println("创建定时任务失败"+e);
+            throw new Exception("创建定时任务失败");
+        }
     } 
 	
     /**  
@@ -151,6 +205,11 @@ public class UserInfoController {
 		return password;
 	} 
     
+	 public static Job getClass(String classname) throws Exception 
+	    {
+	        Class<?> class1 = Class.forName(classname);
+	        return (Job)class1.newInstance();
+	    } 
     /**  
      * 用户删除;  
      * @return  
