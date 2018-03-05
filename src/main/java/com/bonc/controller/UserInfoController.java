@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.authc.UnknownAccountException;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.crypto.hash.SimpleHash;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -129,15 +130,26 @@ public class UserInfoController {
 		UserInfo userInfo = new UserInfo();
 		userInfo.setUsername(userName);
 		userInfo.setName(name);
-		userInfo.setPassword(password);
 		userInfo.setSalt(salt);
+		password = getNewPassword(password,userInfo.getCredentialsSalt());//密码加密
+		userInfo.setPassword(password);
 		SysRole sr = sysRoleService.findByRole(roles);
 		List<SysRole> roleList = new ArrayList<SysRole>();
 		roleList.add(sr);
 		userInfo.setRoleList(roleList);
 		userInfoService.addUserInfo(userInfo);
        return userInfoService.findByUsername(userName).toString();  
-    } 
+    }
+
+	//获取加密后的密码
+	private String getNewPassword(String password, String salt) {
+
+		System.out.println("register pwd:"+password+"|");
+		password = new SimpleHash("MD5",password,salt.getBytes(),2).toHex();
+		System.out.println("register salt:"+salt+"|");
+		System.out.println("register pwd: "+password);
+		return password;
+	} 
     
     /**  
      * 用户删除;  

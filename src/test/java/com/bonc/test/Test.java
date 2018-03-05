@@ -1,15 +1,18 @@
 package com.bonc.test;
 
-import org.springframework.util.DigestUtils;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.util.ByteSource;
 
 public class Test {
 
 	public static void main(String[] args) {
-		String s = DigestUtils.md5DigestAsHex("123456".getBytes());
+		String password = "g";
+		String salt = "ghelloWorld";//d3c59d25033dbf980d29554025c23a75
+		password = new SimpleHash("MD5",password,salt.getBytes(),2).toHex();
 		
-		System.out.println(s);
+		
 
-		System.out.println(DigestUtils.md5DigestAsHex(s.getBytes()));
+		System.out.println(password);
 	}
 
 }
