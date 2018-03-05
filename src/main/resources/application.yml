@@ -1,4 +1,4 @@
-spring:
+spring:   
   datasource:
 #    url: jdbc:mysql://192.168.1.123:3306/test
 #    username: idsbase
@@ -8,7 +8,7 @@ spring:
     username: sa
     password: sa
     driver-class-name: org.h2.Driver
-    schema: classpath:init.sql
+#    schema: classpath:init.sql
   thymeleaf:
     prefix: classpath:/templates
     cache: false
@@ -19,3 +19,5 @@ spring:
     show-sql: true
   mvc:
     throw-exception-if-no-handler-found: true
+server: 
+    port: 8080
