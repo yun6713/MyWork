@@ -5,14 +5,19 @@ import java.util.Properties;
 
 import org.quartz.Scheduler;
 import org.quartz.ee.servlet.QuartzInitializerListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
+
+import com.bonc.controller.UserInfoController;
 @Configuration
 public class SchedulerConfig {
-
+	private Logger log = LoggerFactory.getLogger(UserInfoController.class);
+	
     @Bean(name="SchedulerFactory")
     public SchedulerFactoryBean schedulerFactoryBean() throws IOException {
         SchedulerFactoryBean factory = new SchedulerFactoryBean();
@@ -42,7 +47,7 @@ public class SchedulerConfig {
      */
     @Bean(name="Scheduler")
     public Scheduler scheduler() throws IOException {
-    	System.out.println("schedule");
+    	log.info("schedule");
         return schedulerFactoryBean().getScheduler();
     }
 

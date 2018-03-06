@@ -11,7 +11,10 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.util.ByteSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.bonc.controller.UserInfoController;
 import com.bonc.domain.SysPermission;
 import com.bonc.domain.SysRole;
 import com.bonc.domain.UserInfo;
@@ -24,7 +27,8 @@ import com.bonc.service.UserInfoService;
  *  
  */  
 public class MyShiroRealm extends AuthorizingRealm {  
-  
+	private Logger log = LoggerFactory.getLogger(UserInfoController.class);
+	
     @Resource  
     private UserInfoService userInfoService;  
   
@@ -34,18 +38,18 @@ public class MyShiroRealm extends AuthorizingRealm {
      */  
     @Override  
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {  
-//        System.out.println("MyShiroRealm.doGetAuthenticationInfo()");  
+//        log.info("MyShiroRealm.doGetAuthenticationInfo()");  
         // 获取用户的输入帐号  
         String username = (String) token.getPrincipal();  
-//        System.out.println("token.getCredentials: "+token.getCredentials());  
+//        log.info("token.getCredentials: "+token.getCredentials());  
         // 通过username从数据库中查找 User对象，如果找到，没找到.  
         // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法  
         UserInfo userInfo = userInfoService.findByUsername(username);  
-//        System.out.println("----->>userInfo=" + userInfo);  
+//        log.info("----->>userInfo=" + userInfo);  
         if (userInfo == null) {  
             return null;  
         }  
-//  System.out.println("real salt: "+userInfo.getCredentialsSalt());
+//  log.info("real salt: "+userInfo.getCredentialsSalt());
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(userInfo, // 用户名  
                 userInfo.getPassword(), // 密码  
                 ByteSource.Util.bytes(userInfo.getCredentialsSalt()), // salt=username+salt  
@@ -61,7 +65,7 @@ public class MyShiroRealm extends AuthorizingRealm {
     @Override  
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {  
         // TODO Auto-generated method stub  
-        System.out.println("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");  
+        log.info("权限配置-->MyShiroRealm.doGetAuthorizationInfo()");  
   
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();  
         UserInfo userInfo = (UserInfo) principals.getPrimaryPrincipal();  
@@ -69,9 +73,9 @@ public class MyShiroRealm extends AuthorizingRealm {
         for(SysRole role:userInfo.getRoleList()){  
                 
                authorizationInfo.addRole(role.getRole());  
-               System.out.println(role.getPermissions());  
+               log.info(role.getPermissions().toString());  
                for(SysPermission p:role.getPermissions()){  
-                   System.out.println(p);  
+                   log.info(p.toString());  
                   authorizationInfo.addStringPermission(p.getPermission());  
                }  
            }  

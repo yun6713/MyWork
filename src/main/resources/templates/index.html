@@ -5,28 +5,28 @@
 <meta charset="UTF-8" />
 <title>Insert title here</title>
 <script type="text/javascript" th:inline="javascript">
-function userInfoDel(){
-	var xmlhttp;
-	console.log(1);
-	if (window.XMLHttpRequest)
-	{
-	    //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
-	    xmlhttp=new XMLHttpRequest();
-	}else{
-	    // IE6, IE5 浏览器执行代码
-	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	/*<![CDATA[*/
+	function userInfoDel() {
+		var xmlhttp;
+		console.log(1);
+		if (window.XMLHttpRequest) {
+			//  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+			xmlhttp = new XMLHttpRequest();
+		} else {
+			// IE6, IE5 浏览器执行代码
+			xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+		}
+		xmlhttp.open("POST", "userInfoDel", true);
+		xmlhttp.setRequestHeader("Content-type",
+				"application/x-www-form-urlencoded");
+		xmlhttp.onreadystatechange = function() {
+			if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+				document.getElementById("delResult").innerHTML = xmlhttp.responseText;
+			}
+		}
+		xmlhttp.send("uid=[[${userInfo.uid}]]");
 	}
-	xmlhttp.open("POST","/userInfoDel",true);
-	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-	xmlhttp.onreadystatechange=function()
-	{
-	    if (xmlhttp.readyState==4 and xmlhttp.status==200)
-	    {
-	        document.getElementById("delResult").innerHTML=xmlhttp.responseText;
-	    }
-	}
-	xmlhttp.send("uid="[[${userInfo.uid}]]);
-}
+	/*]]>*/
 </script>
 </head>
 <body>
@@ -56,18 +56,19 @@ function userInfoDel(){
 			name:<input type="text" name="name" th:value="*{name}" />
 		</p>
 		<p>
-			state:<input type="text" name="state" th:value="*{state}" readonly="readonly" />
+			state:<input type="text" name="state" th:value="*{state}"
+				readonly="readonly" />
 		</p>
 		<p>
 			roles:<input type="text" name="roles" th:value="*{roles}"
 				readonly="readonly" />
 		</p>
 		<p>
-			<input type="submit" name="Submit" />
+			<input type="submit" value="Submit" />
 		</p>
 	</form>
 	<p>
-		<input type="button" name="delUserInfo" onclick="userInfoDel()" />
+		<input type="button" value="DelUserInfo" onclick="userInfoDel()" />
 	</p>
 	<div id="delResult"></div>
 </body>
