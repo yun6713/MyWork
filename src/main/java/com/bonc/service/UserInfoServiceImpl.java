@@ -18,21 +18,29 @@ public class UserInfoServiceImpl implements UserInfoService{
     @Transactional(readOnly=true)  
     @Override  
     public UserInfo findByUsername(String username) {  
-        System.out.println("UserInfoServiceImpl.findByUsername()");  
         return userInfoRepository.findByUsername(username);  
     }
 
 	@Override
 	public List<UserInfo> findAllUserInfos() {
-		System.out.println("UserInfoServiceImpl.findByUsername()");  
-        return (List<UserInfo>) userInfoRepository.findAll();
-		
+		return (List<UserInfo>) userInfoRepository.findAll();		
 	}
 
 	@Override
 	public void addUserInfo(UserInfo userInfo) {
 		userInfoRepository.save(userInfo);
 		
+	}
+
+	@Override
+	public UserInfo findByUid(long uid) {
+		return userInfoRepository.findOne(uid);
+	}
+
+	@Override
+	public boolean delete(long uid) {
+		userInfoRepository.delete(uid);
+		return userInfoRepository.findOne(uid)==null;
 	}  
   
 }  

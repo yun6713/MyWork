@@ -1,10 +1,74 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
-<meta charset="UTF-8"/>
+<meta charset="UTF-8" />
 <title>Insert title here</title>
+<script type="text/javascript" th:inline="javascript">
+function userInfoDel(){
+	var xmlhttp;
+	console.log(1);
+	if (window.XMLHttpRequest)
+	{
+	    //  IE7+, Firefox, Chrome, Opera, Safari 浏览器执行代码
+	    xmlhttp=new XMLHttpRequest();
+	}else{
+	    // IE6, IE5 浏览器执行代码
+	    xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	xmlhttp.open("POST","/userInfoDel",true);
+	xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+	xmlhttp.onreadystatechange=function()
+	{
+	    if (xmlhttp.readyState==4 and xmlhttp.status==200)
+	    {
+	        document.getElementById("delResult").innerHTML=xmlhttp.responseText;
+	    }
+	}
+	xmlhttp.send("uid="[[${userInfo.uid}]]);
+}
+</script>
 </head>
 <body>
-index.html
+	<p>展示登录用户信息</p>
+	<table th:object="${userInfo}">
+		<tr>
+			<th>uid</th>
+			<th>username</th>
+			<th>name</th>
+			<th>state</th>
+			<th>roles</th>
+		</tr>
+		<tr>
+			<td th:text="*{uid}"></td>
+			<td th:text="*{username}"></td>
+			<td th:text="*{name}"></td>
+			<td th:text="*{state}"></td>
+			<td th:text="*{roles}"></td>
+		</tr>
+	</table>
+	<form th:object="${userInfo}" method="post" action="userInfoUpdate">
+		<input type="hidden" name="uid" th:value="*{uid}" />
+		<p>
+			username:<input type="text" name="userName" th:value="*{username}" />
+		</p>
+		<p>
+			name:<input type="text" name="name" th:value="*{name}" />
+		</p>
+		<p>
+			state:<input type="text" name="state" th:value="*{state}" readonly="readonly" />
+		</p>
+		<p>
+			roles:<input type="text" name="roles" th:value="*{roles}"
+				readonly="readonly" />
+		</p>
+		<p>
+			<input type="submit" name="Submit" />
+		</p>
+	</form>
+	<p>
+		<input type="button" name="delUserInfo" onclick="userInfoDel()" />
+	</p>
+	<div id="delResult"></div>
 </body>
 </html>

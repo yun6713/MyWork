@@ -43,14 +43,20 @@ CREATE TABLE  IF NOT EXISTS `sys_user_role` (
   CONSTRAINT `FKgkmyslkrfeyn9ukmolvek8b8f1` FOREIGN KEY (`uid`) REFERENCES `user_info` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO `SYS_PERMISSION` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (1,0,'用户管理',0,'0/','userInfo:view','menu','userInfo/userList');
+INSERT INTO `SYS_PERMISSION` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (1,0,'用户管理',0,'0/','userInfo:manage','menu','userInfo/userList');
 INSERT INTO `SYS_PERMISSION` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (2,0,'用户添加',1,'0/1','userInfo:add','button','userInfo/userAdd');
 INSERT INTO `SYS_PERMISSION` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (3,0,'用户删除',1,'0/1','userInfo:del','button','userInfo/userDel');
+INSERT INTO `SYS_PERMISSION` (`id`,`available`,`name`,`parent_id`,`parent_ids`,`permission`,`resource_type`,`url`) VALUES (4,0,'任务添加',1,'0/1','userInfo:addJob','button','userInfo/addjob');
 INSERT INTO `SYS_ROLE` (`id`,`available`,`description`,`role`) VALUES (1,'0','管理员','admin');
 INSERT INTO `SYS_ROLE` (`id`,`available`,`description`,`role`) VALUES (2,'0','VIP会员','vip');
 INSERT INTO `SYS_ROLE` (`id`,`available`,`description`,`role`) VALUES (3,'0','会员','customer');
 INSERT INTO `SYS_ROLE_PERMISSION` (`permission_id`,`role_id`) VALUES (1,1);
-INSERT INTO `SYS_ROLE_PERMISSION` (`permission_id`,`role_id`) VALUES (1,2);
-INSERT INTO `SYS_ROLE_PERMISSION` (`permission_id`,`role_id`) VALUES (1,3);
+INSERT INTO `SYS_ROLE_PERMISSION` (`permission_id`,`role_id`) VALUES (2,2);
+INSERT INTO `SYS_ROLE_PERMISSION` (`permission_id`,`role_id`) VALUES (4,2);
+INSERT INTO `SYS_ROLE_PERMISSION` (`permission_id`,`role_id`) VALUES (4,3);
 INSERT INTO `USER_INFO` (`uid`,`username`,`name`,`password`,`salt`,`state`) VALUES ('1', 'admin', '管理员', 'd3c59d25033dbf980d29554025c23a75', '8d78869f470951332959580424d4bf4f', 0);
+INSERT INTO `USER_INFO` (`uid`,`username`,`name`,`password`,`salt`,`state`) VALUES ('2', 'vip', 'vip', '4a350a2475ae16335946d5b0ceabb9cc', '8d78869f470951332959580424d4bf4f', 0);
+INSERT INTO `USER_INFO` (`uid`,`username`,`name`,`password`,`salt`,`state`) VALUES ('3', 'customer', 'customer', '5296aeb4e66334e9598c04f5a2d2d7b3', '8d78869f470951332959580424d4bf4f', 0);
 INSERT INTO `SYS_USER_ROLE` (`role_id`,`uid`) VALUES (1,1);
+INSERT INTO `SYS_USER_ROLE` (`role_id`,`uid`) VALUES (2,2);
+INSERT INTO `SYS_USER_ROLE` (`role_id`,`uid`) VALUES (3,3);

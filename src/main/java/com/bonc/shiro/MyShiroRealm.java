@@ -29,22 +29,23 @@ public class MyShiroRealm extends AuthorizingRealm {
     private UserInfoService userInfoService;  
   
     /**  
-     * 认证信息(身份验证) Authentication 是用来验证用户身份  
+     * 认证信息(身份验证) Authentication 是用来验证用户身份 
+     * 根据登录用户名获取认证信息；提交给凭证管理器匹配 
      */  
     @Override  
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {  
-        System.out.println("MyShiroRealm.doGetAuthenticationInfo()");  
+//        System.out.println("MyShiroRealm.doGetAuthenticationInfo()");  
         // 获取用户的输入帐号  
         String username = (String) token.getPrincipal();  
-        System.out.println("token.getCredentials: "+token.getCredentials());  
+//        System.out.println("token.getCredentials: "+token.getCredentials());  
         // 通过username从数据库中查找 User对象，如果找到，没找到.  
         // 实际项目中，这里可以根据实际情况做缓存，如果不做，Shiro自己也是有时间间隔机制，2分钟内不会重复执行该方法  
         UserInfo userInfo = userInfoService.findByUsername(username);  
-        System.out.println("----->>userInfo=" + userInfo);  
+//        System.out.println("----->>userInfo=" + userInfo);  
         if (userInfo == null) {  
             return null;  
         }  
-  System.out.println("real salt: "+userInfo.getCredentialsSalt());
+//  System.out.println("real salt: "+userInfo.getCredentialsSalt());
         SimpleAuthenticationInfo authenticationInfo = new SimpleAuthenticationInfo(userInfo, // 用户名  
                 userInfo.getPassword(), // 密码  
                 ByteSource.Util.bytes(userInfo.getCredentialsSalt()), // salt=username+salt  
@@ -53,6 +54,10 @@ public class MyShiroRealm extends AuthorizingRealm {
         return authenticationInfo;  
     }  
   
+    /**
+     * 获取权限信息
+     * @see org.apache.shiro.realm.AuthorizingRealm#doGetAuthorizationInfo(org.apache.shiro.subject.PrincipalCollection)
+     */
     @Override  
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {  
         // TODO Auto-generated method stub  

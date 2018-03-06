@@ -13,10 +13,14 @@ import org.springframework.context.annotation.Configuration;
   
 @Configuration  
 public class ShiroConfiguration {  
-  
+  /**
+   * 装配ShiroFilterFactoryBean；配置过滤信息、登入登出url、登入跳转页
+   * @param securityManager，安全管理器
+   * @return
+   */
     @Bean  
     public ShiroFilterFactoryBean shiroFilter(SecurityManager securityManager) {  
-        System.out.println("ShiroConfiguration.shiroFilter()");  
+//        System.out.println("ShiroConfiguration.shiroFilter()");  
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();  
   
         // 必须设置SecuritManager  
@@ -32,11 +36,12 @@ public class ShiroConfiguration {
         // <!-- authc:所有url都必须认证通过才可以访问; anon:所有url都都可以匿名访问-->  
 //        filterChainDefinitionMap.put("/userInfo/userAdd", "anon");
 //        filterChainDefinitionMap.put("/userInfo/userList", "authc");
+        filterChainDefinitionMap.put("/favicon.ico", "anon"); //下载url图标
         filterChainDefinitionMap.put("/**", "authc"); //authc 
   
         // 如果不设置默认会自动寻找Web工程根目录下的"/login.jsp"页面  
         shiroFilterFactoryBean.setLoginUrl("/userInfo/login");  
-        // 登录成功后要跳转的链接  
+        // 登录成功后要跳转的链接 ；重定向 
         shiroFilterFactoryBean.setSuccessUrl("/userInfo/index");  
         // 未授权界面;  
         shiroFilterFactoryBean.setUnauthorizedUrl("/403");  
